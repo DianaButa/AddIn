@@ -1,0 +1,2 @@
+bin\Debug\OfficeAppManifests\WordTestAddInManifest.xml
+C:\VSBackEnd\WordTestAddIn\WordTestAddIn\bin\Debug\WordTestAddIn.debugapp

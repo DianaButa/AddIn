@@ -1,2 +1,0 @@
-bin\Debug\OfficeAppManifests\AddInManifest.xml
-C:\VSBackEnd\AddIn\AddIn\bin\Debug\AddIn.debugapp

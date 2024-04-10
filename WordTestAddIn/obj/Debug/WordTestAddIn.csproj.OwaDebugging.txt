@@ -1,0 +1,7 @@
+False
+e58e0714-415a-4875-b0f6-e72fbaf2031002309f93-cf14-4945-85b4-c6313f9a3985
+{f68a4c79-b4fc-44a1-a97c-d52b698d152e}{f76a54ea-640b-44e8-b95e-6bda3ac9c3c5}
+{b442a671-d486-408f-b2ef-5966b9f567bf}
+1.0.0.0
+WordTestAddIn
+_layouts/15/
