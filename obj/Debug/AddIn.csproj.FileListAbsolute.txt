@@ -1,0 +1,2 @@
+C:\VSBackEnd\AddIn\AddIn\obj\Debug\AddIn.csproj.AssemblyReference.cache
+C:\VSBackEnd\AddIn\AddIn\obj\Debug\AddIn.csproj.CoreCompileInputs.cache
