@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <App xmlns="http://schemas.microsoft.com/sharepoint/2012/app/manifest"
      Name="WordTestAddIn"
-     ProductID="{7af27039-e1a0-484f-994c-4e4840054e9b}"
+     ProductID="{83a45c50-282e-4e72-a58a-3462d277bddd}"
      Version="1.0.0.0"
      SharePointMinVersion="15.0.0.0"
 >

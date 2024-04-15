@@ -1,2 +1,4 @@
 C:\VSBackEnd\WordTestAddIn\WordTestAddIn\obj\Debug\WordTestAddIn.csproj.AssemblyReference.cache
 C:\VSBackEnd\WordTestAddIn\WordTestAddIn\obj\Debug\WordTestAddIn.csproj.CoreCompileInputs.cache
+C:\Users\IonutPac-Balaj\Desktop\Clone\AddIn\WordTestAddIn\obj\Debug\WordTestAddIn.csproj.AssemblyReference.cache
+C:\Users\IonutPac-Balaj\Desktop\Clone\AddIn\WordTestAddIn\obj\Debug\WordTestAddIn.csproj.CoreCompileInputs.cache
