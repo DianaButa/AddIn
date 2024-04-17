@@ -82,8 +82,22 @@ $(document).ready(function () {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            const documentsData = await response.json();
-            console.log('Documents Information:', documentsData);
+            const documentData = await response.json();
+            console.log('Documents:', documentData);
+
+            //  insert the client information into a table in the document
+            Word.run(async (context) => {
+                const tableData = [];
+
+                documentData.forEach(document => {
+                    tableData.push([document.id, document.Name, document.Description]);
+                });
+
+                const table = context.document.body.insertTable(documentData.length, 3, "Start", tableData);
+                // table.styleBuiltIn = Word.BuiltInStyleName.gridTable5Dark_Accent2;
+                // Synchronize the document state by executing the queued commands
+                await context.sync();
+            });
 
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
