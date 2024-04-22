@@ -1,18 +1,18 @@
 ﻿
 'use strict';
 
+
 Office.onReady(function () {
-    // Office is ready.
     $(document).ready(function () {
         console.log("getClientInfo");
         // The document is ready.
         // Use this to check whether the API is supported in the Word client.
         if (Office.context.requirements.isSetSupported('WordApi', '1.1')) {
-            // Do something that is only available via the new APIs.
             $('#client').on("click", getClientInfo);
             $('#documents').on("click", getDocumentsInfo);
             $('#files').on("click", getFilesInfo);
             $('#findandreplace').on("click", findAndReplace);
+            $('#sendEmail').on("click", sendEmail);
             $('#supportedVersion').html('This code is using Word 2016 or later.');
         } else {
             // Lets you know that this code will not work with your version of Word.
@@ -20,6 +20,57 @@ Office.onReady(function () {
         }
     });
 });
+
+function sendEmail() {
+    Word.run(function (context) {
+        var selectedRange = context.document.getSelection();
+        selectedRange.load("text");
+        return context.sync()
+            .then(function () {
+                var selectedText = selectedRange.text;
+                if (!selectedText.trim()) {
+                    console.error('No text selected.');
+                    $('#message').text("No text selected. Please select some text before sending an email.");
+                    return;
+                }
+                var emailAddress = $('#email').val(); 
+                if (!emailAddress) {
+                    console.error('Email address is required.');
+                    $('#message').text("Email address is required.");
+                    return;
+                }
+                // AJAX call to API project to send email
+                $.ajax({
+                    url: 'https://localhost:7129/api/Client/sendemail',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ Email: emailAddress, SelectedText: selectedText }),
+                    success: function (response) {
+                        console.log("Email sent successfully!");
+                        $('#message').text("Email sent successfully!");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error sending email:', error);
+                        if (xhr.status === 401) {
+                            $('#message').text("Authentication error. Please log in and try again.");
+                        } else if (xhr.status === 500) {
+                            $('#message').text("Server error. Please try again later.");
+                        } else {
+                            $('#message').text("Error sending email. Please try again later.");
+                        }
+                    }
+                });
+            });
+    }).catch(function (error) {
+        console.error('Error:', error);
+        $('#message').text("Error: Unable to retrieve selected text. Please try again later.");
+    });
+}
+
+
+
+
+
 
 
 
@@ -222,138 +273,6 @@ async function getFilesInfo() {
 
 
 
-
-
-
-
-    //async function getClientInfo() {
-    //    try {
-    //        const response = await fetch('https://localhost:7129/api/Client');
-    //        if (!response.ok) {
-    //            throw new Error('Network response was not ok');
-    //        }
-    //        const clientData = await response.json();
-    //        console.log('Client Information:', clientData);
-
-    //        //  insert the client information into a table in the document
-    //        Word.run(async (context) => {
-    //            const tableData = [];
-
-    //            clientData.forEach(client => {
-    //                tableData.push([client.id, client.firstName, client.lastName, client.adress, client.cnp]);
-    //            });
-
-    //            const table = context.document.body.insertTable(clientData.length, 5, "Start", tableData);
-    //            // table.styleBuiltIn = Word.BuiltInStyleName.gridTable5Dark_Accent2;
-    //            // Synchronize the document state by executing the queued commands
-    //            await context.sync();
-    //        });
-
-    //    } catch (error) {
-    //        console.error('There was a problem with the fetch operation:', error);
-    //    }
-    //}
-
-
-
-
-
-    //async function getDocumentsInfo() {
-    //    try {
-    //        const response = await fetch('https://localhost:7129/api/Documents');
-    //        if (!response.ok) {
-    //            throw new Error('Network response was not ok');
-    //        }
-    //        const documentData = await response.json();
-    //        console.log('Documents:', documentData);
-
-    //        //  insert the client information into a table in the document
-    //        Word.run(async (context) => {
-    //            const tableData = [];
-
-    //            documentData.forEach(document => {
-    //                tableData.push([document.id, document.Name, document.Description]);
-    //            });
-
-    //            const table = context.document.body.insertTable(documentData.length, 3, "Start", tableData);
-    //            // table.styleBuiltIn = Word.BuiltInStyleName.gridTable5Dark_Accent2;
-    //            // Synchronize the document state by executing the queued commands
-    //            await context.sync();
-    //        });
-
-    //    } catch (error) {
-    //        console.error('There was a problem with the fetch operation:', error);
-    //    }
-    //}
-    //async function getFilesInfo() {
-    //    try {
-    //        const response = await fetch('https://localhost:7129/api/Files');
-    //        if (!response.ok) {
-    //            throw new Error('Network response was not ok');
-    //        }
-    //        const filesData = await response.json();
-    //        console.log('Files Information:', filesData);
-
-    //    } catch (error) {
-    //        console.error('There was a problem with the fetch operation:', error);
-    //    }
-    //}
-
-
-
-    //async function findAndReplace() {
-    //    try {
-            
-    //        const clientData = await getClientDataFromDatabase();
-
-           
-    //        await replaceMe('<<FirstName>>', clientData.firstName);
-    //        await replaceMe('<<LastName>>', clientData.lastName);
-    //        await replaceMe('<<adress>>', clientData.adress);
-    //        await replaceMe('<<CNP>>', clientData.CNP);
-
-
-    //    } catch (error) {
-    //        console.error('Error during findAndReplace:', error);
-    //    }
-    //}
-
-    //async function getClientDataFromDatabase() {
-    //    try {
-    //        const response = await fetch('https://localhost:7129/api/Client/1');
-    //        if (!response.ok) {
-    //            throw new Error('Network response was not ok');
-    //        }
-    //        const clientData = await response.json();
-    //        console.log('Client Information:', clientData);
-    //        return clientData;
-    //    } catch (error) {
-    //        console.error('Error during getClientDataFromDatabase:', error);
-           
-    //        return { firstName: "Name", lastName: "Lastname", adress: "adress", CNP: "CNP" };
-    //    }
-    //}
-
-    //async function replaceMe(whatToFind, whatToReplaceWith) {
-    //    try {
-    //        await Word.run(async (context) => {
-    //            const searchResults = context.document.body.search(whatToFind, { matchCase: false });
-    //            context.load(searchResults, 'text, font');
-    //            await context.sync();
-
-    //            for (let i = 0; i < searchResults.items.length; i++) {
-    //                searchResults.items[i].insertText(whatToReplaceWith, 'Replace');
-    //            }
-
-    //            await context.sync();
-    //        });
-    //    } catch (error) {
-    //        console.log('Error during replaceMe:', error);
-    //        if (error instanceof OfficeExtension.Error) {
-    //            console.log('Debug info:', error.debugInfo);
-    //        }
-    //    }
-    //}
 
 
 
