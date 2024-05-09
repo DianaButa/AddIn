@@ -11,25 +11,56 @@
             <p>Completeaza documentul pentru :</p>
             <br />
             <div id="customDropdown">
-                <select id="mySelect">
-                    <!-- Default option -->
+                <select id="mySelect" class="button-style">
                     <option disabled selected>Selecteaza un nume</option>
                 </select>
-                <input type="text" id="inputName" style="display: none;" placeholder="Introdu numele">
+                <input type="text" id="inputName" style="display: none;" placeholder="Introdu numele" class="button-style">
+            </div>
+            <br /><br />
+            <p> Alte Optiuni : </p>
+
+            <div>
+                <button onclick="sendEmail()" class="button-style">Trimite Email</button>
+                <br /><br />
+                <label for="email">Introdu e-mail:</label>
+                <input type="email" id="email" placeholder="Introdu email" class="button-style">
             </div>
             <br /><br />
             <div>
-                <label for="email">Recipient Email:</label>
-                <input type="email" id="email" name="email">
+                <button onclick="verifyIBAN()" class="button-style">Verifica IBAN</button>
+                <div id="popup" class="popup" style="display: none;">
+                    <h2>Thank You!</h2>
+                    <p> Salvati datele ? </p>
+                    <button id="saveDataBtn" type="button">Save data</button>
+                </div>
             </div>
-            <div>
-                <button onclick="sendEmail()">Send Email</button>
-            </div>
+
             <br /><br />
-            <button id="documents">Get Documents</button>
-            <br /><br />
+            <!-- Button to add client -->
+            <button id="addclient" class="button-style">Adauga Client</button>
+
+            <!-- Form for adding a client (initially hidden) -->
+            <form id="newClientForm" style="display: none;">
+                <label for="clientLastName">Nume:</label>
+                <input type="text" id="clientLastName" placeholder="Nume" class="button-style">
+                <br>
+                <label for="clientFirstName">Prenume:</label>
+                <input type="text" id="clientFirstName" placeholder="Prenume" class="button-style">
+                <br>
+                <label for="clientAddress">Adresa:</label>
+                <input type="text" id="clientAddress" placeholder="Adresa" class="button-style">
+                <br>
+                <label for="clientCNP">CNP:</label>
+                <input type="text" id="clientCNP" placeholder="CNP" class="button-style">
+                <br>
+                <label for="clientEmail">Email:</label>
+                <input type="email" id="clientEmail" placeholder="Email" class="button-style">
+                <br>
+                <button type="button" id="saveClientBtn" class="button-style">Salveaza Datele</button>
+            </form>
+            <!-- End of form -->
+
         </div>
     </div>
-
 
 </body>

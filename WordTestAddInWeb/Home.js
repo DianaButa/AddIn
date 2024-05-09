@@ -1,25 +1,169 @@
-﻿
-'use strict';
-
+﻿'use strict';
 
 Office.onReady(function () {
     $(document).ready(function () {
         console.log("getClientInfo");
-        // The document is ready.
-        // Use this to check whether the API is supported in the Word client.
         if (Office.context.requirements.isSetSupported('WordApi', '1.1')) {
             $('#client').on("click", getClientInfo);
             $('#documents').on("click", getDocumentsInfo);
             $('#files').on("click", getFilesInfo);
             $('#findandreplace').on("click", findAndReplace);
             $('#sendEmail').on("click", sendEmail);
+            $('#verifyIBAN').on("click", verifyIBAN);
+            $('#addclient').click(function () {
+                console.log("Add client button clicked.");
+                $(".button-style").hide(); 
+                createClientForm();
+            });
             $('#supportedVersion').html('This code is using Word 2016 or later.');
         } else {
-            // Lets you know that this code will not work with your version of Word.
             $('#supportedVersion').html('This code requires Word 2016 or later.');
         }
     });
 });
+
+function createClientForm() {
+    var form = document.createElement('form');
+    form.setAttribute('class', 'newClientForm');
+
+    // Input fields
+    var lastNameLabel = document.createElement('label');
+    lastNameLabel.textContent = 'Nume:';
+    var lastNameInput = document.createElement('input');
+    lastNameInput.setAttribute('type', 'text');
+    lastNameInput.setAttribute('id', 'clientLastName');
+    lastNameInput.setAttribute('name', 'clientLastName');
+
+    var firstNameLabel = document.createElement('label');
+    firstNameLabel.textContent = 'Prenume:';
+    var firstNameInput = document.createElement('input');
+    firstNameInput.setAttribute('type', 'text');
+    firstNameInput.setAttribute('id', 'clientFirstName');
+    firstNameInput.setAttribute('name', 'clientFirstName');
+
+    var addressLabel = document.createElement('label');
+    addressLabel.textContent = 'Adresa:';
+    var addressInput = document.createElement('input');
+    addressInput.setAttribute('type', 'text');
+    addressInput.setAttribute('id', 'clientAddress');
+    addressInput.setAttribute('name', 'clientAddress');
+
+    var cnpLabel = document.createElement('label');
+    cnpLabel.textContent = 'CNP:';
+    var cnpInput = document.createElement('input');
+    cnpInput.setAttribute('type', 'text');
+    cnpInput.setAttribute('id', 'clientCNP');
+    cnpInput.setAttribute('name', 'clientCNP');
+
+    var emailLabel = document.createElement('label');
+    emailLabel.textContent = 'Email:';
+    var emailInput = document.createElement('input');
+    emailInput.setAttribute('type', 'email');
+    emailInput.setAttribute('id', 'clientEmail');
+    emailInput.setAttribute('name', 'clientEmail');
+
+    // "Save Data" button
+    var saveButton = document.createElement('button');
+    saveButton.textContent = 'Salveaza Datele';
+    saveButton.setAttribute('type', 'button');
+    saveButton.addEventListener('click', saveClientData);
+
+    // Append input fields and "Save Data" button to the form
+    form.appendChild(lastNameLabel);
+    form.appendChild(lastNameInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(firstNameLabel);
+    form.appendChild(firstNameInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(addressLabel);
+    form.appendChild(addressInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(cnpLabel);
+    form.appendChild(cnpInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(emailLabel);
+    form.appendChild(emailInput);
+    form.appendChild(document.createElement('br'));
+    form.appendChild(saveButton);
+
+    // Get the reference to the "Adauga Client" button
+    var addButton = document.getElementById('addclient');
+
+    // Insert the form after the button
+    addButton.parentNode.insertBefore(form, addButton.nextSibling);
+}
+
+// Save client data
+function saveClientData() {
+    var clientData = {
+        lastName: document.getElementById('clientLastName').value,
+        firstName: document.getElementById('clientFirstName').value,
+        cnp: document.getElementById('clientCNP').value,
+        address: document.getElementById('clientAddress').value,
+        email: document.getElementById('clientEmail').value
+    };
+
+    fetch('https://localhost:7129/api/Client/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(clientData)
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Client data added successfully.');
+                // Show other buttons after saving data
+                $("#client, #documents, #files, #findandreplace, #sendEmail, #verifyIBAN").show();
+            } else {
+                console.error('Error adding client data:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Error adding client data:', error);
+        });
+
+    var form = document.querySelector('.newClientForm');
+    if (form) {
+        form.parentNode.removeChild(form);
+    }
+}
+
+
+
+
+function verifyIBAN() {
+    Word.run(function (context) {
+        var selectedRange = context.document.getSelection();
+        selectedRange.load("text");
+        return context.sync()
+            .then(function () {
+                var selectedText = selectedRange.text;
+                if (!selectedText.trim()) {
+                    console.error('No text selected.');
+                    $('#message').text("No text selected. Please select some text before verifying the IBAN.");
+                    return;
+                }
+                var selectedIBAN = selectedText.trim();
+                $.ajax({
+                    url: 'https://localhost:7129/api/Client/verify-iban',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ iban: selectedIBAN }),
+                    success: function (response) {
+                        console.log("Verification Result:", response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    });
+}
 
 function sendEmail() {
     Word.run(function (context) {
@@ -33,7 +177,7 @@ function sendEmail() {
                     $('#message').text("No text selected. Please select some text before sending an email.");
                     return;
                 }
-                var emailAddress = $('#email').val(); 
+                var emailAddress = $('#email').val();
                 if (!emailAddress) {
                     console.error('Email address is required.');
                     $('#message').text("Email address is required.");
@@ -66,6 +210,7 @@ function sendEmail() {
         $('#message').text("Error: Unable to retrieve selected text. Please try again later.");
     });
 }
+
 
 
 
