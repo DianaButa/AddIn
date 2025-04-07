@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "JfKvvST8xESSq62Lc+EdfrSn4CBPmmf79BtO0ynfrWU=",
+  "Source": "QuizAppBackend",
+  "BasePath": "_content/QuizAppBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

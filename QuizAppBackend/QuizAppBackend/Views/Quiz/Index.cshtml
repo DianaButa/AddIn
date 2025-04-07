@@ -1,0 +1,58 @@
+@model QuizAppBackend.Models.Quiz
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<body>
+    <h1>Adaugă întrebare</h1>
+
+    <!-- Formular pentru adăugarea întrebării și a răspunsurilor -->
+    <form asp-action="AddQuestionWithAnswers" method="post">
+        <label for="text">Întrebare:</label>
+        <input type="text" id="text" name="Text" required />
+
+        <label for="subject">Subiect:</label>
+        <input type="text" id="subject" name="Subject" required />
+
+        <h3>Răspunsuri:</h3>
+        <div id="answers">
+            <div>
+                <input type="text" name="AnswersText[0].Text" placeholder="Răspuns 1" required />
+                <input type="checkbox" name="AnswersText[0].IsCorrect" /> Corect
+            </div>
+            <div>
+                <input type="text" name="AnswersText[1].Text" placeholder="Răspuns 2" required />
+                <input type="checkbox" name="AnswersText[1].IsCorrect" /> Corect
+            </div>
+            <div>
+                <input type="text" name="AnswersText[2].Text" placeholder="Răspuns 3" required />
+                <input type="checkbox" name="AnswersText[2].IsCorrect" /> Corect
+            </div>
+        </div>
+
+        <button type="submit">Adaugă întrebare</button>
+    </form>
+
+    <hr />
+
+    <h2>Întrebările tale:</h2>
+    <ul>
+        @foreach (var question in Model.Questions)
+        {
+            <li>
+                <strong>@question.Text</strong> (Subiect: @question.Subject)
+                <ul>
+                    @foreach (var answer in question.Answers)
+                    {
+                        <li>@answer.Text - @(answer.IsCorrect ? "Corect" : "Greșit")</li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+</body>
+</html>
